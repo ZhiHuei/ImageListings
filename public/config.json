@@ -1,0 +1,14 @@
+{
+    "dev": {
+        "app": {
+            "port": 3000
+        },
+        "db": {
+            "user": "postgres",
+            "host": "localhost",
+            "database": "ImageListings",
+            "password": "******",
+            "port": 5500
+        }
+    }
+}
