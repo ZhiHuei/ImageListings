@@ -1,26 +1,9 @@
-import express from 'express';
-import { graphqlHTTP } from 'express-graphql';
-import { buildSchema } from 'graphql';
+import { Server } from './server';
 
-const grapQLSchema = buildSchema(`
-    type Query {
-        hello: String
-    }
-`);
+console.log("app starting .... ");
 
-const root = {
-    hello: () => 'Hello World!'
-
-};
-const app = express();
-const port = 3000;
-app.use(
-    '/Graphql',
-    graphqlHTTP({
-      schema: grapQLSchema,
-      rootValue: root,
-      graphiql: true,
-    }),
-  );
-
-app.listen(port);
+const starter = new Server().start(3000)
+  .then(port => console.log(`Running on port ${port}`))
+  .catch(error => {
+    console.log(error)
+});
