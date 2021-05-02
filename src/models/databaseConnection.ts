@@ -44,24 +44,38 @@ export class DataBaseConnection {
         }
     }
 
-    private static async lookupImage(name: string, categories: string) {
-        return await this.query('SELECT * FROM ImageDetails WHERE name=$1 and categories=$2', [name, categories]);
+    private static async lookupImage(name: string, category?: string) {
+        if (category)
+            return await this.query('SELECT * FROM ImageDetails WHERE name=$1 and category=$2', [name, category]);
+        else
+            return await this.query('SELECT * FROM ImageDetails WHERE name=$1', [name]);
     }
 
-    public static async findOrAddImage(name: string, categories: string) {
+    public static async findOrAddImage(name: string, category?: string) {
         try{
             // Lookup if image exist in database
-            const image = await this.lookupImage(name, categories);
+            const image = await this.lookupImage(name, category);
             console.log("lookup");
             console.log(image);
             if (image && image.rows.length > 0) {
                 return image.rows;
             }
             // Insert if not found
-            const res = await this.query(`INSERT INTO ImageDetails(name, categories, uploadDate) VALUES($1, $2, to_timestamp(${Date.now()} / 1000.0))`, [name, categories]);
+            const res = await this.query(`INSERT INTO ImageDetails(name, category, uploadDate) VALUES($1, $2, to_timestamp(${Date.now()} / 1000.0))`, [name, category]);
             if (res) {
                 return res.rows;
             }
+            return [];
+        } catch (err) {
+            this.release();
+            throw new Error(err);
+        }
+    }
+    public static async getAlbums() {
+        try {
+            const res = await this.query(`SELECT category FROM ImageDetails`);
+            if (res)
+                return res.rows.map(row => row.category);
             return [];
         } catch (err) {
             this.release();

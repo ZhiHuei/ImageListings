@@ -49,7 +49,7 @@ export class Server {
                     }
                     // Uncategorised images
                     else {
-                        await DataBaseConnection.findOrAddImage(category.split('.').slice(0, -1).join('.'), 'Uncategorized');
+                        await DataBaseConnection.findOrAddImage(category.split('.').slice(0, -1).join('.'));
                     }
 
                 });
