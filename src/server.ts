@@ -1,14 +1,15 @@
 import express from 'express';
 import { DataBaseConnection } from './models/databaseConnection';
+import { FileHelper } from './models/fileHelper';
 import {
     graphqlExpress
   } from 'graphql-server-express';
 import { schema } from './graphql/schema';
 import * as config from '../public/config.json';
+import path from 'path';
 
 export class Server {
     private app;
-    // private dbCon;
     constructor() {
         this.app = express();
         this.routerConfig();
@@ -18,6 +19,23 @@ export class Server {
         this.app.use('/graphql', express.json(), graphqlExpress({
             schema
         }));
+
+        this.app.use('/getPhoto', express.json(), express.urlencoded({extended: false}), (req, res) => {
+            let name = req.query.name;
+            let category = req.query.category;
+            var options = {
+                root: path.join(config.dev.repo)
+            };
+            console.log(category);
+            console.log(name);
+
+            res.sendFile('Hello.txt', options, (err) =>{
+                if (err)
+                    throw err;
+                else
+                    console.log('sent:');
+            })
+        })
     }
 
     public start = async (port: number) => {
@@ -25,36 +43,7 @@ export class Server {
         await DataBaseConnection.init();
 
         // read album and load into db
-        const fs = require('fs');
-        fs.readdir(config.dev.repo, (err: any, files: any[]) => {
-            if (err)
-                throw new Error(err);
-
-            files.forEach(category => {
-                fs.lstat(config.dev.repo + '\\' + category, async (err: any, stats: any) => {
-                    if (err)
-                        throw new Error(err);
-
-                    // Catogorised images
-                    if (stats.isDirectory()) {
-                        fs.readdir(config.dev.repo + '\\' + category, (err: any, files: any[]) => {
-                            if (err)
-                                throw new Error(err);
-
-                            files.forEach(async image => {
-                                await DataBaseConnection.findOrAddImage(image.split('.').slice(0, -1).join('.'), category);
-                            });
-                            console.log(`${files.length} loaded from ${category}`);
-                        });
-                    }
-                    // Uncategorised images
-                    else {
-                        await DataBaseConnection.findOrAddImage(category.split('.').slice(0, -1).join('.'));
-                    }
-
-                });
-            });
-        });
+        FileHelper.onStartup();
 
         return new Promise((resolve, reject) => {
             this.app.listen(port, () => {

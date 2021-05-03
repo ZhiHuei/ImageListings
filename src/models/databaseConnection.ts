@@ -51,7 +51,7 @@ export class DataBaseConnection {
             return await this.query('SELECT * FROM ImageDetails WHERE name=$1', [name]);
     }
 
-    public static async findOrAddImage(name: string, category?: string) {
+    public static async findOrAddImage(name: string, filepath: string, category?: string) {
         try{
             // Lookup if image exist in database
             const image = await this.lookupImage(name, category);
@@ -61,7 +61,7 @@ export class DataBaseConnection {
                 return image.rows;
             }
             // Insert if not found
-            const res = await this.query(`INSERT INTO ImageDetails(name, category, uploadDate) VALUES($1, $2, to_timestamp(${Date.now()} / 1000.0))`, [name, category]);
+            const res = await this.query(`INSERT INTO ImageDetails(name, category, filepath, uploadDate) VALUES($1, $2, $3, to_timestamp(${Date.now()} / 1000.0))`, [name, category, filepath]);
             if (res) {
                 return res.rows;
             }
@@ -74,6 +74,7 @@ export class DataBaseConnection {
     public static async getAlbums() {
         try {
             const res = await this.query(`SELECT category FROM ImageDetails`);
+            // TODO: make sure album is in the local directory
             if (res)
                 return res.rows.map(row => row.category);
             return [];

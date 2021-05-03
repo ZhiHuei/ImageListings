@@ -2,6 +2,7 @@ CREATE TABLE IF NOT EXISTS ImageDetails (
 	ID SERIAL PRIMARY KEY NOT NULL,
 	Name TEXT NOT NULL,
 	Category TEXT,
+	filepath TEXT NOT NULL,
 	uploadDate DATE NOT NULL
 );
 

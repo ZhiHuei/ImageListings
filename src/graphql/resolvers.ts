@@ -1,4 +1,5 @@
 import { DataBaseConnection } from "../models/databaseConnection";
+import { FileHelper } from "../models/fileHelper";
 
 export const resolvers = {
     Query: {
@@ -13,16 +14,8 @@ export const resolvers = {
         },
         getAlbums: async () => {
             try {
-                return await DataBaseConnection.getAlbums();
-            } catch (error) {
-                console.log('Error getting albums');
-                throw new Error(error);
-            }
-        },
-        getPhotos: async () => {
-            try {
-                // return await DataBaseConnection
-                return "";
+                // return await DataBaseConnection.getAlbums();
+                return FileHelper.getAllAlbums();
             } catch (error) {
                 console.log('Error getting albums');
                 throw new Error(error);
