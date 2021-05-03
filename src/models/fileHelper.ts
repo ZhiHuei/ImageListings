@@ -32,7 +32,6 @@ export class FileHelper {
                                 fullPath = path.resolve(config.dev.repo + '\\' + category, image);
                                 const imageName = image.split('.').slice(0, -1).join('.');
                                 await DataBaseConnection.findOrAddImage(imageName, fullPath, category);
-                                // this.allAlbums.push(category);
                                 this.allLoadedFiles.push({category, name: imageName})
                             });
                             console.log(`${files.length} files loaded from ${category}`);

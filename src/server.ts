@@ -5,8 +5,6 @@ import {
     graphqlExpress
   } from 'graphql-server-express';
 import { schema } from './graphql/schema';
-import * as config from '../public/config.json';
-import path from 'path';
 
 export class Server {
     private app;
@@ -20,21 +18,20 @@ export class Server {
             schema
         }));
 
-        this.app.use('/getPhoto', express.json(), express.urlencoded({extended: false}), (req, res) => {
+        this.app.use('/getPhoto', express.json(), express.urlencoded({extended: false}), async (req, res) => {
             let name = req.query.name;
             let category = req.query.category;
-            var options = {
-                root: path.join(config.dev.repo)
-            };
-            console.log(category);
-            console.log(name);
 
-            res.sendFile('Hello.txt', options, (err) =>{
-                if (err)
-                    throw err;
-                else
-                    console.log('sent:');
-            })
+            if (name && category) {
+                const filepath = await DataBaseConnection.getFilePath(name as string, category as string);
+
+                res.sendFile(filepath, (err) =>{
+                    if (err)
+                        throw err;
+                    else
+                        console.log('sent:');
+                })
+            }
         })
     }
 

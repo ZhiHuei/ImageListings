@@ -83,4 +83,16 @@ export class DataBaseConnection {
             throw new Error(err);
         }
     }
+
+    public static async getFilePath(name: string, category: string) {
+        try {
+            const res = await this.query(`SELECT filepath FROM ImageDetails WHERE name=$1 and category=$2`, [name, category]);
+            if (res)
+                return res.rows[0].filepath as string;
+            return '';
+        } catch (err) {
+            this.release();
+            throw new Error(err);
+        }
+    }
 }
