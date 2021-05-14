@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import { DataBaseConnection } from './models/databaseConnection';
 import { FileHelper } from './models/fileHelper';
 import {
@@ -10,11 +11,12 @@ export class Server {
     private app;
     constructor() {
         this.app = express();
+        this.app.use(cors());
         this.routerConfig();
     }
 
     private routerConfig() {
-        this.app.use('/graphql', express.json(), graphqlExpress({
+        this.app.use('/graphql', express.json(), express.urlencoded({extended: false}), graphqlExpress({
             schema
         }));
 

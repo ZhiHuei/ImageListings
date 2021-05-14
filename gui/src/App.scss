@@ -1,0 +1,75 @@
+.App {
+  min-width: 0;
+}
+.App-header {
+  background-color: #2b6bd8;
+  min-height: 150px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas: "logo upload text";
+  grid-template-rows: auto;
+  padding: 0 50px;
+  position: relative;
+  .logo {
+    grid-area: logo;
+    margin-top: 30px;
+    width: 100%;
+    .vl {
+      border-left: 6px solid white;
+      height: 100px;
+      width: 100%;
+      display: block;
+      overflow: hidden;
+      span {
+        font-family: sans-serif;
+        font-size: 35px;
+        color: white;
+        display: block;
+        margin-top: 30px;
+        padding-left: 10px;
+      }
+      p {
+        font-family: serif;
+        font-size: 20px;
+        color: #230607;
+        margin: 0;
+        display: block;
+        padding-left: 10px;
+      }
+    }
+  }
+  .upload {
+    margin-bottom: 10px;
+    height: fit-content;
+    align-self: flex-end;
+    text-align: center;
+    Button {
+      vertical-align: super;
+    }
+  }
+  .account {
+    grid-area: text;
+    margin-top: 30px;
+    overflow: hidden;
+  }
+  .user {
+    margin-left: 20px;
+    span {
+      vertical-align: super;
+      margin-left:10px;
+    }
+    margin-bottom: 10px;
+  }
+}
+.App-body {
+  margin: 10px 0;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-auto-rows: auto;
+  grid-row-gap: 50px;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}

@@ -1,0 +1,12 @@
+.items {
+    height: inherit;
+    width: inherit;
+}
+
+.grid {
+    display: grid;
+    grid-auto-rows: auto;
+    grid-row-gap: 50px;
+    align-items: center;
+    justify-content: center;
+}
