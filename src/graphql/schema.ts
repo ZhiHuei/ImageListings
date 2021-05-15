@@ -3,8 +3,7 @@ import { resolvers } from './resolvers';
 const typeDefs = `
     type Query {
         hello: String
-        getAlbums: [String]
-        getPhotos: String
+        albums: [String]
     }
 `;
 

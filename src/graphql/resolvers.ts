@@ -12,7 +12,7 @@ export const resolvers = {
             }
             return 'Hello OWLR'
         },
-        getAlbums: async () => {
+        albums: async () => {
             try {
                 // return await DataBaseConnection.getAlbums();
                 return FileHelper.getAllAlbums();
