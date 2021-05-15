@@ -20,19 +20,28 @@ export class Server {
             schema
         }));
 
-        this.app.use('/getPhoto', express.json(), express.urlencoded({extended: false}), async (req, res) => {
+        this.app.get('/getPhoto/:category', express.json(), express.urlencoded({extended: false}), async (req, res) => {
             let name = req.query.name;
-            let category = req.query.category;
+            let category = req.params.category;
 
-            if (name && category) {
+            if (name) {
                 const filepath = await DataBaseConnection.getFilePath(name as string, category as string);
+                console.log(filepath);
 
-                res.sendFile(filepath, (err) =>{
-                    if (err)
-                        throw err;
-                    else
-                        console.log('sent:');
-                })
+                if (filepath.length) {
+                    res.sendFile(filepath, (err) =>{
+                        if (err)
+                            throw err;
+                        else
+                            console.log('sent:');
+                        res.end();
+                    })
+                } else {
+                    res.status(400).send('File is not found')
+                }
+            } else {
+                // Return names of photos in an album
+                res.send(FileHelper.getAllPhotos(category));
             }
         })
     }

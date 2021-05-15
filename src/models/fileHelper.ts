@@ -53,4 +53,8 @@ export class FileHelper {
     public static getAllAlbums() {
         return new Set(this.allLoadedFiles.map(file => file.category));
     }
+
+    public static getAllPhotos(category: string) {
+        return this.allLoadedFiles.filter(file => file.category == category).map(f => f.name);
+    }
 }

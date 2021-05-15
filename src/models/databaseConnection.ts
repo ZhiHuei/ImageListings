@@ -87,7 +87,7 @@ export class DataBaseConnection {
     public static async getFilePath(name: string, category: string) {
         try {
             const res = await this.query(`SELECT filepath FROM ImageDetails WHERE name=$1 and category=$2`, [name, category]);
-            if (res)
+            if (res && res.rowCount > 0)
                 return res.rows[0].filepath as string;
             return '';
         } catch (err) {
