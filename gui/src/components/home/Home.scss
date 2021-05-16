@@ -5,9 +5,11 @@
 
 .grid {
     display: grid;
+    grid-template-columns: auto 1fr auto;
     grid-auto-rows: auto;
     grid-row-gap: 50px;
     align-items: center;
     justify-content: center;
-    height: 100%;
+    font-size: calc(10px + 2vmin);
+    color: white;
 }

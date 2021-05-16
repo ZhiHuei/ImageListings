@@ -18,15 +18,20 @@ function Sidebar(props) {
         fetchAlbums();
     }, []);
 
+    const handleClick = param => (event) => {
+        props.selectAlbum(param);
+        event.preventDefault();
+    }
+
     return (
         <div className="sidebar">
             {albums.map((album, index) => {
                 if (album) {
                    return (
-                       <div className="album" key={index}><Button variant="outlined" color="primary">{album}</Button></div>
+                       <div className="album" key={index}><Button onClick={handleClick(album)} variant="outlined" color="primary">{album}</Button></div>
                    )
                 }
-               return;
+               return (null);
             })}
         </div>
     )
