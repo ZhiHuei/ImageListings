@@ -6,13 +6,18 @@ CREATE TABLE IF NOT EXISTS ImageDetails (
 	uploadDate DATE NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS UserDetails (
+	IpAddress TEXT PRIMARY KEY,
+	lastDateUsed DATE NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS Ratings (
 	ID SERIAL PRIMARY KEY NOT NULL,
 	Score int NOT NULL,
 	ImageId int NOT NULL,
 	IpAddress TEXT NOT NULL,
 	FOREIGN KEY (ImageId) REFERENCES ImageDetails(ID),
-	FOREIGN KEY (IpAddress) REFERENCES User(IpAddress)
+	FOREIGN KEY (IpAddress) REFERENCES UserDetails(IpAddress)
 );
 
 CREATE TABLE IF NOT EXISTS Download (
@@ -21,10 +26,5 @@ CREATE TABLE IF NOT EXISTS Download (
 	ImageId int NOT NULL,
 	IpAddress TEXT NOT NULL,
 	FOREIGN KEY (ImageId) REFERENCES ImageDetails(ID),
-	FOREIGN KEY (IpAddress) REFERENCES User(IpAddress)
-);
-
-CREATE TABLE IF NOT EXISTS User (
-	IpAddress PRIMARY KEY TEXT,
-	lastDateUsed DATE NOT NULL
+	FOREIGN KEY (IpAddress) REFERENCES UserDetails(IpAddress)
 );
