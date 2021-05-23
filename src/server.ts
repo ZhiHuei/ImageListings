@@ -26,7 +26,6 @@ export class Server {
 
             if (name) {
                 const filepath = await DataBaseConnection.getFilePath(name as string, category as string);
-                console.log(filepath);
 
                 if (filepath.length) {
                     res.sendFile(filepath, (err) =>{

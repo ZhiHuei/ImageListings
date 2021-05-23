@@ -19,7 +19,6 @@ export class DataBaseConnection {
         });
 
         this.client = await this.pool.connect();
-        // console.log("Client", this.client);
 
         // test connection
         await this.testConnection();
@@ -30,7 +29,6 @@ export class DataBaseConnection {
     }
 
     public static async testConnection() {
-        console.log("test connection");
         await this.query(`SELECT id FROM ImageDetails`);
     }
 

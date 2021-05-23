@@ -24,7 +24,6 @@ function Photo(props) {
 
     return (
         <div className="container">
-            {/* {loadPhoto} */}
             {photos.map((photo) => {
                 return loadPhoto(photo)
             })}

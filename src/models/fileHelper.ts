@@ -1,17 +1,17 @@
 import {DataBaseConnection} from './databaseConnection';
 import * as config from '../../public/config.json';
 import path from 'path';
+import fs from 'fs';
 
 export interface IFile {
     category: string;
     name: string;
 }
-
+// Ambitious Plan: insert the details into db only through the user upload or interrupt to detect file changes using worker thread. 
 export class FileHelper {
     public static allLoadedFiles: IFile[] = [];
 
     public static onStartup() {
-        const fs = require('fs');
         fs.readdir(config.dev.repo, (err: any, files: any[]) => {
             if (err)
                 throw new Error(err);
