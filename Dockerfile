@@ -9,4 +9,8 @@ COPY package.json /usr/src/imagelisting
 RUN npm install 
 
 # Bundle app source 
-COPY . /usr/src/imagelisting
+COPY ./album /usr/src/imagelisting
+COPY ./package.json /usr/src/imagelisting
+COPY ./public /usr/src/imagelisting
+COPY ./src /usr/src/imagelisting
+COPY ./tsconfig.json /usr/src/imagelisting
