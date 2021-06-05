@@ -1,5 +1,5 @@
 import { Pool, PoolClient } from 'pg';
-import * as config from '../../public/config.json';
+import { getConfig } from './config';
 
 // TODO: See if we can implement composite design patten here (probably in web workers periodic scanning, construct folder/file structure.)
 export class DataBaseConnection {
@@ -7,9 +7,10 @@ export class DataBaseConnection {
     private static client: PoolClient;
 
     public static async init() {
-        console.log("init");
+        const db  = getConfig()?.db;
+        if (!db) 
+            throw new Error('db is not configured!');
 
-        const db = config.dev.db;
         this.pool = new Pool({
             user: db.user,
             host: db.host,
@@ -53,8 +54,6 @@ export class DataBaseConnection {
         try{
             // Lookup if image exist in database
             const image = await this.lookupImage(name, category);
-            console.log("lookup");
-            console.log(image);
             if (image && image.rows.length > 0) {
                 return image.rows;
             }
