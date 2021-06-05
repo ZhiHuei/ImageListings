@@ -6,13 +6,10 @@ services:
         container_name: backend
         # image: node:14.12.0
         build: ./ 
-        command: npm run start:docker
+        command: npm run start
         working_dir: /usr/src/imagelisting
         environment: 
-            POSTGRES_USER: postgres
-            POSTGRES_PASSWORD: password
-            POSTGRES_DB: ImageListing
-            POSTGRES_HOST: postgres
+            NODE_ENV: docker
         ports: 
             - "3000:3000"
         volumes:

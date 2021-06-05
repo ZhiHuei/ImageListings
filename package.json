@@ -6,8 +6,7 @@
   "scripts": {
     "start": "tsc && node dist/src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "SET NODE_ENV=dev&&nodemon -e ts  --exec \"npm run start\"",
-    "start:docker": "SET NODE_ENV=docker&& npm run start"
+    "dev": "SET NODE_ENV=dev&&nodemon -e ts  --exec \"npm run start\""
   },
   "repository": {
     "type": "git",
