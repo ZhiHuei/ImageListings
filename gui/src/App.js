@@ -1,7 +1,10 @@
 import './App.scss';
 import Home from './components/home/Home';
+import Signin from './components/signin/Signin';
+import React, {useState, useEffect} from "react";
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   return (
     <div className="App">
       <div className="App-header">
@@ -14,7 +17,7 @@ function App() {
       </div>
 
       <div className="App-body">
-        <Home></Home>
+        { isLoggedIn ? <Home></Home> : <Signin></Signin>}        
       </div>
     </div>
   );

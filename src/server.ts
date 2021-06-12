@@ -6,6 +6,8 @@ import {
     graphqlExpress
   } from 'graphql-server-express';
 import { schema } from './graphql/schema';
+import { SiginController } from './controllers/signin';
+import { RegisterController } from './controllers/register';
 
 export class Server {
     private app;
@@ -42,7 +44,10 @@ export class Server {
                 // Return names of photos in an album
                 res.send(FileHelper.getAllPhotos(category));
             }
-        })
+        });
+
+        this.app.post('/signin', express.json(), express.urlencoded({extended: false}), (req, res) => SiginController.signinAuthentication(req, res));
+        this.app.post('/register', express.json(), express.urlencoded({extended: false}), (req, res) => RegisterController.handleRegister(req, res));
     }
 
     public start = async (port: number) => {

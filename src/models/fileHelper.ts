@@ -7,7 +7,7 @@ export interface IFile {
     category: string;
     name: string;
 }
-// Ambitious Plan: insert the details into db only through the user upload or interrupt to detect file changes using worker thread. 
+// TODO: Watcher to update files status
 export class FileHelper {
     public static allLoadedFiles: IFile[] = [];
 

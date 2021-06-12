@@ -1,5 +1,7 @@
 import { Pool, PoolClient } from 'pg';
 import { getConfig } from './config';
+import * as bcrypt from 'bcrypt';
+import express from 'express';
 
 // TODO: See if we can implement composite design patten here (probably in web workers periodic scanning, construct folder/file structure.)
 export class DataBaseConnection {
@@ -7,10 +9,7 @@ export class DataBaseConnection {
     private static client: PoolClient;
 
     public static async init() {
-        const db  = getConfig()?.db;
-        if (!db) 
-            throw new Error('db is not configured!');
-
+        const db = getConfig.getDb();
         this.pool = new Pool({
             user: db.user,
             host: db.host,
@@ -25,7 +24,7 @@ export class DataBaseConnection {
         await this.testConnection();
     }
 
-    public static async release() {
+    private static async release() {
         this.client.release();
     }
 
@@ -37,7 +36,7 @@ export class DataBaseConnection {
         try {
             const res = await this.client.query(text, values);
             return res;
-        } catch(err) {
+        } catch (err) {
             this.release();
             throw new Error(err);
         }
@@ -51,12 +50,13 @@ export class DataBaseConnection {
     }
 
     public static async findOrAddImage(name: string, filepath: string, category?: string) {
-        try{
+        try {
             // Lookup if image exist in database
             const image = await this.lookupImage(name, category);
             if (image && image.rows.length > 0) {
                 return image.rows;
             }
+
             // Insert if not found
             const res = await this.query(`INSERT INTO ImageDetails(name, category, filepath, uploadDate) VALUES($1, $2, $3, to_timestamp(${Date.now()} / 1000.0))`, [name, category, filepath]);
             if (res) {
@@ -87,6 +87,46 @@ export class DataBaseConnection {
             if (res && res.rowCount > 0)
                 return res.rows[0].filepath as string;
             return '';
+        } catch (err) {
+            this.release();
+            throw new Error(err);
+        }
+    }
+    public static async registerUser(email: string, hash: string, req: express.Request) {
+        try {
+            const data = await this.query(`INSERT INTO LoginDetails(email, hash) VALUES($1, $2) RETURNING ID`, [email, hash]);            
+            await this.query(`INSERT INTO UserDetails(userid, lastdateused) VALUES($1, to_timestamp(${Date.now()} / 1000.0))`, [data.rows[0].id]);
+        } catch (err) {
+            this.release();
+            throw new Error(err);
+        }
+    }
+
+    public static async verifyUser(email: string, password: string) {
+        try {
+            const res = await this.query(`SELECT * FROM LoginDetails WHERE email=$1`, [email]);
+            console.log('verifyuser', res);
+
+            if (res && res.rowCount > 0) {
+                const isValid = bcrypt.compareSync(password, res.rows[0].hash);
+
+                if (isValid) {
+                    return await this.getUserDetails(res.rows[0].id);
+                }
+            }
+            return [];
+        } catch (err) {
+            this.release();
+            throw new Error(err);
+        }
+    }
+
+    private static async getUserDetails(userId: number) {
+        try {
+            const res = await this.query(`SELECT * FROM UserDetails WHERE userid=$1`, [userId]);
+            if (res && res.rowCount > 0)
+                return (res.rows as string[]);
+            return [];
         } catch (err) {
             this.release();
             throw new Error(err);

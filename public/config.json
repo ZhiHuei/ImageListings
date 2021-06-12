@@ -1,14 +1,24 @@
 {
     "dev": {
-        "app": {
-            "port": 3000
-        },
         "db": {
             "user": "postgres",
             "host": "localhost",
             "database": "ImageListings",
-            "password": "******",
+            "password": "****",
             "port": 5500
-        }
+        },
+        "repo": "./album",
+        "secretKey": "****"
+    },
+    "docker" : {
+        "db": {
+            "user": "postgres",
+            "host": "postgres",
+            "database": "ImageListing",
+            "password": "****",
+            "port": 5432
+        },
+        "repo": "./album",
+        "secretKey": "****"
     }
 }
