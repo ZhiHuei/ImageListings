@@ -4,10 +4,11 @@ import { DataBaseConnection } from './models/databaseConnection';
 import { FileHelper } from './models/fileHelper';
 import {
     graphqlExpress
-  } from 'graphql-server-express';
+} from 'graphql-server-express';
 import { schema } from './graphql/schema';
 import { SiginController } from './controllers/signin';
 import { RegisterController } from './controllers/register';
+import { errorHandler } from './models/errorHandler';
 
 export class Server {
     private app;
@@ -18,19 +19,20 @@ export class Server {
     }
 
     private routerConfig() {
-        this.app.use('/graphql', express.json(), express.urlencoded({extended: false}), graphqlExpress({
+        this.app.use('/graphql', express.json(), express.urlencoded({ extended: false }), graphqlExpress({
             schema
         }));
 
-        this.app.get('/getPhoto/:category', express.json(), express.urlencoded({extended: false}), async (req, res) => {
+        this.app.get('/getPhoto/:category', express.json(), express.urlencoded({ extended: false }), async (req, res) => {
             let name = req.query.name;
             let category = req.params.category;
 
             if (name) {
-                const filepath = await DataBaseConnection.getFilePath(name as string, category as string);
+                const filepath = await DataBaseConnection.getFilePath(name as string, category as string)
+                    .catch((err) => errorHandler(err));
 
                 if (filepath.length) {
-                    res.sendFile(filepath, (err) =>{
+                    res.sendFile(filepath, (err: any) => {
                         if (err)
                             throw err;
                         else
@@ -46,8 +48,8 @@ export class Server {
             }
         });
 
-        this.app.post('/signin', express.json(), express.urlencoded({extended: false}), (req, res) => SiginController.signinAuthentication(req, res));
-        this.app.post('/register', express.json(), express.urlencoded({extended: false}), (req, res) => RegisterController.handleRegister(req, res));
+        this.app.post('/signin', express.json(), express.urlencoded({ extended: false }), (req, res) => SiginController.signinAuthentication(req, res));
+        this.app.post('/register', express.json(), express.urlencoded({ extended: false }), (req, res) => RegisterController.handleRegister(req, res));
     }
 
     public start = async (port: number) => {

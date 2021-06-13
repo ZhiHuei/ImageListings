@@ -2,31 +2,31 @@ import * as jwt from 'jsonwebtoken';
 import express from 'express';
 import { DataBaseConnection } from '../models/databaseConnection';
 import { getConfig } from '../models/config';
+import { errorHandler } from '../models/errorHandler';
 
 export class SiginController {
     public static async signinAuthentication(req: express.Request, res: express.Response) {
         const { authorization } = req.headers;
         const { email, password } = req.body;
-        try {
-            if (authorization) {
-                res.send(this.getAuthTokenId());
-            } else {
-                if (!email || !password) {
-                    res.status(400).send('Incorrect submission');
-                }
-                const user = await DataBaseConnection.verifyUser(email, password);
-                const { userid, lastdateused } = user[0] as any;
-                console.log({userid, lastdateused});
-                
-                if (userid && lastdateused) {
-                    const token = this.createSession(email);
-                    res.send({ userid, token, lastdateused });
-                } else {
-                    res.status(400).send('User is not found');
-                }
+
+
+        if (authorization) {
+            res.send(this.getAuthTokenId());
+        } else {
+            if (!email || !password) {
+                return res.status(400).send('Incorrect submission');
             }
-        } catch (err) {
-            res.status(400).send(err);
+            const user = await DataBaseConnection.verifyUser(email, password)
+                .catch((err) => errorHandler(err));
+
+            const userid = user[0]?.userid;
+            const lastdateused = user[0]?.lastdateused;
+
+            if (!userid && !lastdateused)
+                return res.status(400).send(user[0]);
+
+            const token = this.createSession(email);
+            res.send({ userid, token, lastdateused });
         }
     }
 
@@ -34,7 +34,7 @@ export class SiginController {
         console.log('Auth ok');
     }
 
-    private static createSession(email: string) {        
+    private static createSession(email: string) {
         const token = this.signToken(email);
         return token;
     };
