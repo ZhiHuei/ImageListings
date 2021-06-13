@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import config from '../../config.json';
 import './Photo.scss';
@@ -10,7 +10,7 @@ function Photo(props) {
     useEffect(() => {
         const fetchPhotos = async () => {
             console.log('fetchPhotosss', album);
-            const result = await axios.get(config.serverUrl + '/getPhoto/' + album, {headers: {Accept: 'application/json'}});
+            const result = await axios.get(config.serverUrl + '/getPhoto/' + album, { headers: { Accept: 'application/json' } });
             setPhotos(result.data);
         }
         fetchPhotos();

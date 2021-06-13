@@ -2,12 +2,12 @@ import axios from 'axios';
 import React, { useState } from "react";
 import config from '../../config.json';
 
-function Signin(props) {
+function Register(props) {
     const [signInEmail, setSignInEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    async function onSubmitSignIn() {
-        const result = await axios.post(config.serverUrl + '/signin',
+    async function onSubmitRegister() {
+        const result = await axios.post(config.serverUrl + '/register',
             JSON.stringify({
                 email: signInEmail,
                 password: password
@@ -16,11 +16,8 @@ function Signin(props) {
                 headers: { Accept: 'application/json', 'Content-Type': 'application/json' }
             }
         );
-        console.log(result);
         if (result.status === 200) {
-            props.onRouteChange('home')
-        } else {
-            console.log('Invalid email or password.')
+            props.onRouteChange('signin')
         }
     }
 
@@ -37,7 +34,7 @@ function Signin(props) {
             <main className="pa4 black-80">
                 <div className="measure">
                     <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
-                        <legend className="f1 fw6 ph0 mh0">Sign In</legend>
+                        <legend className="f1 fw6 ph0 mh0">Register</legend>
                         <div className="mt3">
                             <label className="db fw6 lh-copy f6" htmlFor="email-address">Email</label>
                             <input
@@ -61,14 +58,11 @@ function Signin(props) {
                     </fieldset>
                     <div className="">
                         <input
-                            onClick={onSubmitSignIn}
+                            onClick={onSubmitRegister}
                             className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib"
                             type="submit"
-                            value="Sign in"
+                            value="Register"
                         />
-                    </div>
-                    <div className="lh-copy mt3">
-                        <p  onClick={() => props.onRouteChange('register')} className="f6 link dim black db pointer">Register</p>
                     </div>
                 </div>
             </main>
@@ -77,4 +71,4 @@ function Signin(props) {
 }
 
 
-export default Signin;
+export default Register;
