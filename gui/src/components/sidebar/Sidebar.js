@@ -12,7 +12,15 @@ function Sidebar(props) {
             var query = `query Query {\
                 albums\
             }`
-            const result = await axios.post(config.serverUrl + '/graphql', { query }, { headers: { Accept: 'application/json', 'Content-Type': 'application/json' } });
+            const result = await axios.post(config.serverUrl + '/graphql', { query }, 
+            {   
+                headers: 
+                { 
+                    Accept: 'application/json', 
+                    'Content-Type': 'application/json',
+                    'Authorization': window.sessionStorage.getItem('token')
+                } 
+            });
             setAlbums(result.data.data.albums);
         }
         fetchAlbums();

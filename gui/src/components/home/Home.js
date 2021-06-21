@@ -7,14 +7,13 @@ function Home(props) {
     const [selectedAlbum, setSelectedAlbum] = useState('');
 
     function onAlbumClicked(album) {
-        console.log('onClicked', album);
         setSelectedAlbum(album);
     }
 
     return (
         <span className="grid">
             <Sidebar selectAlbum={onAlbumClicked}></Sidebar>
-            {console.log('album', selectedAlbum), selectedAlbum.length ? <Photo album={selectedAlbum}></Photo> : (null)}
+            {selectedAlbum.length ? <Photo album={selectedAlbum}></Photo> : (null)}
         </span>
     )
 

@@ -9,7 +9,6 @@ function Photo(props) {
 
     useEffect(() => {
         const fetchPhotos = async () => {
-            console.log('fetchPhotosss', album);
             const result = await axios.get(config.serverUrl + '/getPhoto/' + album, { headers: { Accept: 'application/json' } });
             setPhotos(result.data);
         }
@@ -19,6 +18,7 @@ function Photo(props) {
     const loadPhoto = (photo) => {
         console.log('load photo', photo);
         const url = config.serverUrl + '/getPhoto/' + album + '?name=' + photo;
+        // eslint-disable-next-line jsx-a11y/alt-text
         return (<img className="image" src={url}></img>)
     }
 

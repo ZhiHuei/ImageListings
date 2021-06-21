@@ -32,7 +32,6 @@ function App() {
         
         const token = window.sessionStorage.getItem('token');
         if (token) {
-            console.log('useEffect');
             login();
         }
     }, [])

@@ -1,5 +1,4 @@
 import express from 'express';
-import cors from 'cors';
 import { DataBaseConnection } from './models/databaseConnection';
 import { FileHelper } from './models/fileHelper';
 import {
@@ -9,6 +8,7 @@ import { schema } from './graphql/schema';
 import { SiginController } from './controllers/signin';
 import { RegisterController } from './controllers/register';
 import { errorHandler } from './models/errorHandler';
+import { Authorization } from './controllers/authorization';
 
 export class Server {
     private app;
@@ -30,7 +30,7 @@ export class Server {
     }
 
     private routerConfig() {
-        this.app.use('/graphql', express.json(), express.urlencoded({ extended: false }), graphqlExpress({
+        this.app.use('/graphql', express.json(), express.urlencoded({ extended: false }), Authorization.requireAuth, graphqlExpress({
             schema
         }));
 
