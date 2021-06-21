@@ -27,7 +27,7 @@ export class DataBaseConnection {
         this.client.release();
     }
 
-    public static async testConnection() {
+    private static async testConnection() {
         await this.query(`SELECT id FROM ImageDetails`);
     }
 

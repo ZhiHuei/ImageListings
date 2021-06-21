@@ -4,21 +4,23 @@
             "user": "postgres",
             "host": "localhost",
             "database": "ImageListings",
-            "password": "****",
+            "password": "1234",
             "port": 5500
         },
+        "redis_uri": "redis://127.0.0.1:6060",
         "repo": "./album",
-        "secretKey": "****"
+        "secretKey": "somekey"
     },
     "docker" : {
         "db": {
             "user": "postgres",
             "host": "postgres",
             "database": "ImageListing",
-            "password": "****",
+            "password": "password",
             "port": 5432
         },
+        "redis_uri": "redis://redis:6379",
         "repo": "./album",
-        "secretKey": "****"
+        "secretKey": "somekey"
     }
 }

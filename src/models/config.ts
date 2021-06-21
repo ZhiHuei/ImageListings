@@ -8,6 +8,7 @@ interface IConfig {
         password: string,
         port: number
     },
+    redis_uri: string,
     repo: string,
     secretKey: string
 }
@@ -20,6 +21,7 @@ class Config {
             password: "",
             port: 0
         },
+        redis_uri: "",
         repo: "",
         secretKey: ""
     };
@@ -34,6 +36,8 @@ class Config {
     public getDb = () => this._config.db;
 
     public getSecretKey = () => this._config.secretKey;
+
+    public getRedisUri = () => this._config.redis_uri;
 }
 
 export const getConfig = new Config();

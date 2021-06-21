@@ -18,7 +18,9 @@ function Signin(props) {
         );
         console.log(result);
         if (result.status === 200) {
-            props.onRouteChange('home')
+            saveAuthToken(result.data.token);
+            props.onRouteChange('home');
+            // TODO: load profile details
         } else {
             console.log('Invalid email or password.')
         }
@@ -30,6 +32,10 @@ function Signin(props) {
 
     function onPasswordChange(event) {
         setPassword(event.target.value);
+    }
+
+    function saveAuthToken(token) {
+        window.sessionStorage.setItem('token', token);
     }
 
     return (

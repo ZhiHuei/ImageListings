@@ -2,6 +2,7 @@ import * as jwt from 'jsonwebtoken';
 import express from 'express';
 import { DataBaseConnection } from '../models/databaseConnection';
 import { getConfig } from '../models/config';
+import { redisConn } from '../models/redisConn';
 import { errorHandler } from '../models/errorHandler';
 
 export class SiginController {
@@ -9,9 +10,16 @@ export class SiginController {
         const { authorization } = req.headers;
         const { email, password } = req.body;
 
-
         if (authorization) {
-            res.send(this.getAuthTokenId());
+            const checkId = await this.getAuthTokenId(authorization)
+                .catch((error) => errorHandler(error));
+
+            const userid = checkId?.id;
+            
+            if (!userid)
+                return res.status(400).send(checkId);
+
+            res.send(userid);
         } else {
             if (!email || !password) {
                 return res.status(400).send('Incorrect submission');
@@ -25,18 +33,27 @@ export class SiginController {
             if (!userid && !lastdateused)
                 return res.status(400).send(user[0]);
 
-            const token = this.createSession(email);
+            const token = await this.createSession(email, userid)
+                .catch((error) => errorHandler(error));
             res.send({ userid, token, lastdateused });
         }
     }
 
-    private static getAuthTokenId() {
-        console.log('Auth ok');
+    private static getAuthTokenId(token: string) {
+        return new Promise<any>((resolve, reject) => {
+            redisConn.getValue(token)
+                .then((value) => resolve(value))
+                .catch((error) => reject(error));
+        });
     }
 
-    private static createSession(email: string) {
+    private static async createSession(email: string, id: string) {
         const token = this.signToken(email);
-        return token;
+        return new Promise<string>((resolve, reject) => {
+            redisConn.setToken(token, id)
+                .then(() => resolve(token))
+                .catch((error) => reject(error));
+        });
     };
 
     private static signToken(username: string) {
